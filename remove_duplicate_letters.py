@@ -1,22 +1,27 @@
-def removeDuplicateLetters(s: str) -> str:
+def remove_duplicate_letters(text: str) -> str:
     from collections import Counter
 
-    freq = Counter(s)   # remaining frequency
-    stack = []
-    visited = set()
+    remaining = Counter(text)   # frequency of characters left
+    result_stack = []
+    used_chars = set()
 
-    for ch in s:
-        freq[ch] -= 1   # this occurrence is used
+    for letter in text:
+        remaining[letter] -= 1
 
-        if ch in visited:
+        # skip if already added
+        if letter in used_chars:
             continue
 
-        # maintain monotonic stack
-        while stack and stack[-1] > ch and freq[stack[-1]] > 0:
-            removed = stack.pop()
-            visited.remove(removed)
+        # maintain lexicographical order
+        while (
+            result_stack and
+            result_stack[-1] > letter and
+            remaining[result_stack[-1]] > 0
+        ):
+            removed_char = result_stack.pop()
+            used_chars.remove(removed_char)
 
-        stack.append(ch)
-        visited.add(ch)
+        result_stack.append(letter)
+        used_chars.add(letter)
 
-    return "".join(stack)
+    return "".join(result_stack)
